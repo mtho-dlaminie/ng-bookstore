@@ -1,0 +1,46 @@
+
+<div class="card m-3" *ngIf="(books$ | async) as books">
+  <div class="card-header">
+    {{pageTitle}}
+  </div>
+
+  <div class="card-body">
+
+    <div class="table-responsive">
+      <table class="table mb-0"
+             >
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Authors</th>
+            <th>Price</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let book of books">
+
+            <td>
+              <!-- We can enable this when we have a book detail page -->
+              <!-- <a [routerLink]="['/products', book.id]">
+                {{ book.name }}
+              </a> -->
+              
+                {{ book.title }}
+              
+            </td>
+            <td>{{ transformAuthor(book.authors) }}</td>
+            <td>{{ book.price }}</td>
+
+            <td>
+              <button class="btn btn-outline-primary btn-sm"
+                      [routerLink]="['/books', book.id, 'edit']">
+                Edit
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

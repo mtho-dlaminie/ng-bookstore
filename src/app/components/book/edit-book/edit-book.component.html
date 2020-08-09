@@ -1,0 +1,104 @@
+<div class="card m-5">
+  <div class="card-header bg-dark text-white">
+    {{ pageTitle }}
+  </div>
+
+  <div class="card-body">
+    <form novalidate
+          (ngSubmit)="saveBook()"
+          [formGroup]="bookForm">
+
+      <div class="form-group row mb-2">
+        <label class="col-md-2 col-form-label"
+               for="bookNameId">Book Name</label>
+        <div class="col-md-8">
+          <input class="form-control"
+                 id="bookNameId"
+                 type="text"
+                 placeholder="Name (required)"
+                 formControlName="title" />
+        </div>
+      </div>
+
+      <div class="form-group row mb-2">
+        <label class="col-md-2 col-form-label"
+               for="bookNameId">Year</label>
+        <div class="col-md-8">
+          <input class="form-control"
+                 type="text"
+                 placeholder="year (required)"
+                 formControlName="year" />
+        </div>
+      </div>
+
+      <div class="form-group row mb-2">
+        <label class="col-md-2 col-form-label"
+               for="bookPriceId">Price</label>
+        <div class="col-md-8">
+          <input class="form-control"
+                 id="bookPriceId"
+                 type="text"
+                 placeholder="Price (required)"
+                 formControlName="price" />
+        </div>
+      </div>
+
+      <div formArrayName="authors">
+          <div class="form-group row mb-2"
+               *ngFor="let author of authors.controls; let i=index"
+               [formGroupName]="i">
+            <label class="col-md-2 col-form-label">Author {{i + 1}}</label>
+
+            <div class="col-md-8">
+              <input class="form-control"
+                     type="text"
+                     placeholder="Author (required)"
+                     formControlName="name" />
+            </div>
+            <button class="col-md-1 btn btn-outline-warning btn-sm"
+                    type="button"
+                    title="Delete author"
+                    (click)="deleteAuthor(i)">Delete Author
+            </button>
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2 mb-2">
+          <button class="btn btn-outline-secondary btn-sm"
+                  type="button"
+                  title="Add an author"
+                  (click)="addAuthor()">
+            Add Author
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group row mb-2">
+        <div class="offset-md-2 col-md-4">
+          <button class="btn btn-primary mr-3"
+                  style="width: 80px;"
+                  type="submit"
+                  [title]="bookForm.valid ? 'Save your entered data' : 'Disabled until the form data is valid'"
+                  [disabled]="!bookForm.valid">
+            Save
+          </button>
+          <button class="btn btn-outline-secondary mr-3"
+                  style="width: 80px;"
+                  type="button"
+                  title="Cancel your edits"
+                  [routerLink]="['/book-list']">
+            Cancel
+          </button>
+          <button class="btn btn-outline-warning"
+                  style="width: 80px;"
+                  type="button"
+                  title="Delete this book"
+                  (click)="deleteBook()">
+            Delete
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

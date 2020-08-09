@@ -1,0 +1,50 @@
+<div class="card m-5">
+    <div class="card-header bg-dark text-white">
+      {{ pageTitle }}
+    </div>
+  
+    <div class="card-body">
+      <form novalidate
+            (ngSubmit)="saveAuthor()"
+            [formGroup]="authorForm">
+  
+        <div class="form-group row mb-2">
+          <label class="col-md-2 col-form-label"
+                 for="bookNameId">Author Name</label>
+          <div class="col-md-8">
+            <input class="form-control"
+                   id="AuthorNameId"
+                   type="text"
+                   placeholder="Name (required)"
+                   formControlName="name" />
+          </div>
+        </div>
+  
+        <div class="form-group row mb-2">
+          <div class="offset-md-2 col-md-4">
+            <button class="btn btn-primary mr-3"
+                    style="width: 80px;"
+                    type="submit"
+                    [disabled]="!authorForm.valid">
+              Save
+            </button>
+            <button class="btn btn-outline-secondary mr-3"
+                    style="width: 80px;"
+                    type="button"
+                    title="Cancel your edits"
+                    [routerLink]="['/authors']">
+              Cancel
+            </button>
+            <button class="btn btn-outline-warning"
+                    style="width: 80px;"
+                    type="button"
+                    title="Delete this author"
+                    (click)="deleteAuthor()">
+              Delete
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
