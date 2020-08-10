@@ -1,5 +1,4 @@
-
-<div class="card m-3" *ngIf="(books$ | async) as books">
+<div class="card m-3">
   <div class="card-header">
     {{pageTitle}}
   </div>
@@ -7,8 +6,7 @@
   <div class="card-body">
 
     <div class="table-responsive">
-      <table class="table mb-0"
-             >
+      <table class="table mb-0">
         <thead>
           <tr>
             <th>Name</th>
@@ -25,9 +23,9 @@
               <!-- <a [routerLink]="['/products', book.id]">
                 {{ book.name }}
               </a> -->
-              
-                {{ book.title }}
-              
+
+              {{ book.title }}
+
             </td>
             <td>{{ transformAuthor(book.authors) }}</td>
             <td>{{ book.price }}</td>
@@ -43,4 +41,8 @@
       </table>
     </div>
   </div>
+</div>
+<div *ngIf="errorMessage"
+     class="alert alert-danger">
+  Error: {{ errorMessage }}
 </div>

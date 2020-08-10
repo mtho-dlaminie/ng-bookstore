@@ -1,5 +1,4 @@
-<div class="card m-3"
-     *ngIf="(authors$ | async) as authors">
+<div class="card m-3">
   <div class="card-header">
     {{pageTitle}}
   </div>
@@ -32,4 +31,8 @@
       </table>
     </div>
   </div>
+</div>
+<div *ngIf="errorMessage"
+     class="alert alert-danger">
+  Error: {{ errorMessage }}
 </div>
