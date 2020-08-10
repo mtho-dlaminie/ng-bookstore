@@ -12,12 +12,18 @@ import { Author } from 'src/app/model/author';
 export class ListBookComponent implements OnInit {
 
   pageTitle = 'Book List';
-  books$: Observable<Book[]>;
+  books: Book[];
+  errorMessage = '';
 
   constructor(public bookService: BookService) { }
 
   ngOnInit(): void {
-    this.books$ = this.bookService.getBooks();
+    this.bookService.getBooks().subscribe( {
+      next: books => {
+        this.books = books;
+      },
+      error: err => this.errorMessage = err
+    })
   }
 
   transformAuthor(authors: Author[]): string[] {

@@ -11,11 +11,17 @@ import { Author } from 'src/app/model/author';
 export class ListAuthorComponent implements OnInit {
 
   pageTitle = 'List Authors';
-  authors$: Observable<Author[]>;
+  authors: Author[];
+  errorMessage = '';
 
   constructor(private authorService: AuthorService) { }
 
   ngOnInit(): void {
-    this.authors$ = this.authorService.getAuthors();
+    this.authorService.getAuthors().subscribe( {
+      next: authors => {
+        this.authors = authors;
+      },
+      error: err => this.errorMessage = err
+    })
   }
 }
