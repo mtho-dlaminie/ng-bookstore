@@ -16,7 +16,11 @@
                  id="bookNameId"
                  type="text"
                  placeholder="Name (required)"
-                 formControlName="title" />
+                 formControlName="title"
+                 [ngClass]="{'is-invalid': displayMessage.title }" />
+          <span class="invalid-feedback">
+            {{displayMessage.title}}
+          </span>
         </div>
       </div>
 
@@ -27,7 +31,11 @@
           <input class="form-control"
                  type="text"
                  placeholder="year (required)"
-                 formControlName="year" />
+                 formControlName="year"
+                 [ngClass]="{'is-invalid': displayMessage.year }" />
+          <span class="invalid-feedback">
+            {{displayMessage.year}}
+          </span>
         </div>
       </div>
 
@@ -39,28 +47,32 @@
                  id="bookPriceId"
                  type="text"
                  placeholder="Price (required)"
-                 formControlName="price" />
+                 formControlName="price"
+                 [ngClass]="{'is-invalid': displayMessage.price }" />
+          <span class="invalid-feedback">
+            {{displayMessage.price}}
+          </span>
         </div>
       </div>
 
       <div formArrayName="authors">
-          <div class="form-group row mb-2"
-               *ngFor="let author of authors.controls; let i=index"
-               [formGroupName]="i">
-            <label class="col-md-2 col-form-label">Author {{i + 1}}</label>
+        <div class="form-group row mb-2"
+             *ngFor="let author of authors.controls; let i=index"
+             [formGroupName]="i">
+          <label class="col-md-2 col-form-label">Author {{i + 1}}</label>
 
-            <div class="col-md-8">
-              <input class="form-control"
-                     type="text"
-                     placeholder="Author (required)"
-                     formControlName="name" />
-            </div>
-            <button class="col-md-1 btn btn-outline-warning btn-sm"
-                    type="button"
-                    title="Delete author"
-                    (click)="deleteAuthor(i)">Delete Author
-            </button>
+          <div class="col-md-8">
+            <input class="form-control"
+                   type="text"
+                   placeholder="Author (required)"
+                   formControlName="name" />
           </div>
+          <button class="col-md-1 btn btn-outline-warning btn-sm"
+                  type="button"
+                  title="Delete author"
+                  (click)="deleteAuthor(i)">Delete Author
+          </button>
+        </div>
       </div>
 
       <div class="row">
@@ -100,5 +112,8 @@
         </div>
       </div>
     </form>
+  </div>
+  <div class="alert alert-danger"
+       *ngIf="errorMessage">{{errorMessage}}
   </div>
 </div>
