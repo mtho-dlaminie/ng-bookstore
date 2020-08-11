@@ -5,43 +5,39 @@ import { catchError, tap, map, shareReplay } from 'rxjs/operators';
 import { Book } from '../model/book';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BookService {
-
   private mockUrl = 'api/books';
   private devUrl = 'http://localhost:8080/book-service-api/v1/books/';
+  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getBooks(): Observable<Book[]> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get<Book[]>(this.mockUrl, {headers})
-      .pipe(
-        shareReplay(),
-        tap(data => console.log(JSON.stringify(data))),
-        catchError(this.handleError)
-      );
-  }
- 
+  books$ = this.http.get<Book[]>(this.mockUrl, {headers: this.headers}).pipe(
+    tap((data) => console.log(JSON.stringify(data))),
+    shareReplay(1),
+    catchError(this.handleError)
+  );
+
   getBook(id: number): Observable<Book> {
     if (id === 0) {
       return of(this.initializeBook());
     }
     const url = `${this.mockUrl}/${id}`;
-    return this.http.get<Book>(url)
-      .pipe(
-        tap(data => console.log('getBook: ' + JSON.stringify(data))),
-        catchError(this.handleError)
-      );
+    return this.http.get<Book>(url).pipe(
+      tap((data) => console.log('getBook: ' + JSON.stringify(data))),
+      catchError(this.handleError)
+    );
   }
 
   createBook(book: Book): Observable<Book> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     book.id = null;
-    return this.http.post<Book>(this.mockUrl, book, { headers })
+    return this.http
+      .post<Book>(this.mockUrl, book, { headers })
       .pipe(
-        tap(data => console.log('createBook: ' + JSON.stringify(data))),
+        tap((data) => console.log('createBook: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }
@@ -49,9 +45,10 @@ export class BookService {
   deleteBook(id: number): Observable<{}> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.mockUrl}/${id}`;
-    return this.http.delete<Book>(url, { headers })
+    return this.http
+      .delete<Book>(url, { headers })
       .pipe(
-        tap(data => console.log('deleteBook: ' + id)),
+        tap((data) => console.log('deleteBook: ' + id)),
         catchError(this.handleError)
       );
   }
@@ -59,7 +56,8 @@ export class BookService {
   updateBook(book: Book): Observable<Book> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.mockUrl}/${book.id}`;
-    return this.http.put<Book>(url, book, { headers })
+    return this.http
+      .put<Book>(url, book, { headers })
       .pipe(
         tap(() => console.log('updatebook: ' + book.id)),
         // Return the book on an update
@@ -91,7 +89,7 @@ export class BookService {
       title: null,
       authors: [],
       price: null,
-      year: null
+      year: null,
     };
   }
 }
