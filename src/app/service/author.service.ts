@@ -2,42 +2,40 @@ import { Injectable } from '@angular/core';
 import { Author } from '../model/author';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, tap, map } from 'rxjs/operators';
+import { catchError, tap, map, shareReplay } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthorService {
   private mockUrl = 'api/authors';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getAuthors(): Observable<Author[]> {
-    return this.http.get<Author[]>(this.mockUrl)
-      .pipe(
-        tap(data => console.log(JSON.stringify(data))),
-        catchError(this.handleError)
-      );
-  }
- 
+  authors$ = this.http.get<Author[]>(this.mockUrl).pipe(
+    tap((data) => console.log(JSON.stringify(data))),
+    shareReplay(1),
+    catchError(this.handleError)
+  );
+
   getAuthor(id: number): Observable<Author> {
     if (id === 0) {
       return of(this.initializeAuthor());
     }
     const url = `${this.mockUrl}/${id}`;
-    return this.http.get<Author>(url)
-      .pipe(
-        tap(data => console.log('getAuthor: ' + JSON.stringify(data))),
-        catchError(this.handleError)
-      );
+    return this.http.get<Author>(url).pipe(
+      tap((data) => console.log('getAuthor: ' + JSON.stringify(data))),
+      catchError(this.handleError)
+    );
   }
 
   createAuthor(author: Author): Observable<Author> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     author.id = null;
-    return this.http.post<Author>(this.mockUrl, author, { headers })
+    return this.http
+      .post<Author>(this.mockUrl, author, { headers })
       .pipe(
-        tap(data => console.log('createAuthor: ' + JSON.stringify(data))),
+        tap((data) => console.log('createAuthor: ' + JSON.stringify(data))),
         catchError(this.handleError)
       );
   }
@@ -45,9 +43,10 @@ export class AuthorService {
   deleteAuthor(authorId: number): Observable<{}> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.mockUrl}/${authorId}`;
-    return this.http.delete<Author>(url, { headers })
+    return this.http
+      .delete<Author>(url, { headers })
       .pipe(
-        tap(data => console.log('deleteAuthor: ' + authorId)),
+        tap((data) => console.log('deleteAuthor: ' + authorId)),
         catchError(this.handleError)
       );
   }
@@ -55,7 +54,8 @@ export class AuthorService {
   updateAuthor(author: Author): Observable<Author> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.mockUrl}/${author.id}`;
-    return this.http.put<Author>(url, author, { headers })
+    return this.http
+      .put<Author>(url, author, { headers })
       .pipe(
         tap(() => console.log('updateAuthor: ' + author.id)),
         // Return the author on an update
