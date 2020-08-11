@@ -17,7 +17,7 @@ export class ListAuthorComponent implements OnInit {
   constructor(private authorService: AuthorService) { }
 
   ngOnInit(): void {
-    this.authorService.getAuthors().subscribe( {
+    this.authorService.authors$.subscribe( {
       next: authors => {
         this.authors = authors;
       },
