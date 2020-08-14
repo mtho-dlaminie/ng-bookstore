@@ -4,38 +4,47 @@ export class BooksData {
     static books: Book[] = [
         {
             id: 1,
-            title: "Learning Java",
-            year: 2018,
-            price: 500,
+            title: "Everyday Italian",
+            year: 2005,
+            price: 50,
             authors: [
-                {
-                    id: 3,
-                    name: "Jack Y. Johnson"
-                },
-                {
-                    id: 1,
-                    name: "James K. Jackson"
-                }
+              {
+                id: 1,
+                name: "Giada De Laurentiis"
+              },
+              {
+                id: 2,
+                name: "Sam T. Bruce"
+              }
             ]
-        },
-        {
+          },
+          {
             id: 2,
-            title: "Fundamentals of Programming",
-            year: 2017,
-            price: 450,
-            authors: []
-        },
-        {
-            id: 3,
-            title: "Learning English",
-            year: 2015,
-            price: 250,
+            title: "Harry Potter",
+            year: 2005,
+            price: 29.99,
             authors: [
-                {
-                    id: 3,
-                    name: "Jack Y. Johnson"
-                }
+              {
+                id: 3,
+                name: "J K. Rowling"
+              },
+              {
+                id: 4,
+                name: "Erik T. Ray"
+              }
             ]
+          },
+          {
+            id: 3,
+            title: "Learning XML",
+            year: 2003,
+            price: 39.95,
+            authors: [
+              {
+                id: 4,
+                name: "Erik T. Ray"
+              }
+            ]           
         }
     ]
 }
