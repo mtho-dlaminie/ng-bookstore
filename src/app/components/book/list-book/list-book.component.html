@@ -5,7 +5,7 @@
 
   <div class="card-body">
 
-    <div class="table-responsive">
+    <div class="table-responsive" *ngIf="books$ | async as books">
       <table class="table mb-0">
         <thead>
           <tr>

@@ -16,6 +16,7 @@ import { ListBookComponent } from './components/book/list-book/list-book.compone
 import { EditBookComponent } from './components/book/edit-book/edit-book.component';
 import { EditAuthorComponent } from './components/author/edit-author/edit-author.component';
 import { ListAuthorComponent } from './components/author/list-author/list-author.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 const routes: Routes = [
   {
@@ -52,7 +53,8 @@ const routes: Routes = [
     ListBookComponent,
     EditBookComponent,
     EditAuthorComponent,
-    ListAuthorComponent
+    ListAuthorComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

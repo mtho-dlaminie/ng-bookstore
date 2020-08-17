@@ -16,6 +16,7 @@ import { error } from 'protractor';
 import { GenericValidator } from 'src/app/shared/generic-validator';
 import { Observable, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { LoadingService } from '../../loading/loading.service';
 
 @Component({
   selector: 'app-edit-book',
@@ -46,7 +47,8 @@ export class EditBookComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private bookService: BookService
+    private bookService: BookService,
+    private loadingService: LoadingService
   ) { // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
     this.validationMessages = {
@@ -133,10 +135,18 @@ export class EditBookComponent implements OnInit {
     this.authors.markAsDirty();
   }
 
+  //TODO: Use a Resolver to avoid page partial loading.
   getBook(id: number): void {
+    this.loadingService.loadingOn();
     this.bookService.getBook(id).subscribe({
-      next: (book: Book) => this.displayBook(book),
-      error: err => this.errorMessage = err
+      next: (book: Book) => {
+        this.loadingService.loadingOff();
+        this.displayBook(book);
+      },
+      error: (err) => {
+        this.loadingService.loadingOff();
+        this.errorMessage = err;
+      }
     });
   }
 
