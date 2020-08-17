@@ -19,6 +19,7 @@ import { AuthorService } from 'src/app/service/author.service';
 import { GenericValidator } from 'src/app/shared/generic-validator';
 import { Observable, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { LoadingService } from '../../loading/loading.service';
 
 @Component({
   selector: 'app-edit-author',
@@ -44,7 +45,8 @@ export class EditAuthorComponent implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authorService: AuthorService
+    private authorService: AuthorService,
+    private loadingService: LoadingService
   ) {
     // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
@@ -104,10 +106,18 @@ export class EditAuthorComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  //TODO: Use a Resolver to avoid page partial loading.
   getAuthor(id: number): void {
+    this.loadingService.loadingOn();
     this.authorService.getAuthor(id).subscribe({
-      next: (author: Author) => this.displayBook(author),
-      error: err => this.errorMessage = err
+      next: (author: Author) => {
+        this.loadingService.loadingOff();
+        this.displayBook(author)
+      },
+      error: err => {
+        this.loadingService.loadingOff();
+        this.errorMessage = err;
+      }
     });
   }
 
