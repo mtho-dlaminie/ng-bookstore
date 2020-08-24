@@ -17,6 +17,8 @@ import { GenericValidator } from 'src/app/shared/generic-validator';
 import { Observable, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { LoadingService } from '../../loading/loading.service';
+import { BookStoreService } from 'src/app/service/book-store.service';
+import { MessagesService } from '../../messages/messages.service';
 
 @Component({
   selector: 'app-edit-book',
@@ -26,7 +28,7 @@ import { LoadingService } from '../../loading/loading.service';
 export class EditBookComponent implements OnInit {
   @ViewChildren(FormControlName, { read: ElementRef })
   formInputElements: ElementRef[];
-  
+
   errorMessage: string;
   bookForm: FormGroup;
   book: Book;
@@ -48,8 +50,11 @@ export class EditBookComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private bookService: BookService,
-    private loadingService: LoadingService
-  ) { // Defines all of the validation messages for the form.
+    private bookStoreService: BookStoreService,
+    private loadingService: LoadingService,
+    private message: MessagesService
+  ) {
+    // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
     this.validationMessages = {
       title: {
@@ -58,11 +63,11 @@ export class EditBookComponent implements OnInit {
         maxlength: 'Title cannot exceed 50 characters.',
       },
       price: {
-        required: ' Price is required'
+        required: ' Price is required',
       },
       year: {
-        required: 'Year is required'
-      }
+        required: 'Year is required',
+      },
     };
 
     // Define an instance of the validator for use with this form,
@@ -145,8 +150,8 @@ export class EditBookComponent implements OnInit {
       },
       error: (err) => {
         this.loadingService.loadingOff();
-        this.errorMessage = err;
-      }
+        this.message.showErrors(err)
+      },
     });
   }
 
@@ -205,13 +210,13 @@ export class EditBookComponent implements OnInit {
         if (b.id === 0) {
           this.bookService.createBook(b).subscribe({
             next: () => this.onSaveComplete(),
-            error: err => this.errorMessage = err
+            error: (err) => (this.message.showErrors(err)),
           });
         } else {
           console.log('Updated Book Sent ', b);
           this.bookService.updateBook(b).subscribe({
             next: () => this.onSaveComplete(),
-            error: err => this.errorMessage = err
+            error: (err) => (this.message.showErrors(err)),
           });
         }
       } else {
@@ -229,11 +234,10 @@ export class EditBookComponent implements OnInit {
       this.onSaveComplete();
     } else {
       if (confirm(`Really delete the product: ${this.book.title}?`)) {
-        this.bookService.deleteBook(this.book.id)
-          .subscribe({
-            next: () => this.onSaveComplete(),
-            error: err => this.errorMessage = err
-          });
+        this.bookService.deleteBook(this.book.id).subscribe({
+          next: () => this.onSaveComplete(),
+          error: (err) => (this.message.showErrors(err)),
+        });
       }
     }
   }
@@ -241,6 +245,7 @@ export class EditBookComponent implements OnInit {
   onSaveComplete(): void {
     // Reset the form to clear the flags
     this.bookForm.reset();
+    this.bookStoreService.loadAllBooks();
     this.router.navigate(['/books']);
   }
 }

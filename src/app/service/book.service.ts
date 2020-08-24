@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, tap, map, shareReplay } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { Book } from '../model/book';
 
 @Injectable({
@@ -10,15 +10,9 @@ import { Book } from '../model/book';
 export class BookService {
   private mockUrl = 'api/books';
   private devUrl = 'http://localhost:8080/book-service-api/v1/books/';
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(private http: HttpClient) {}
 
-  books$ = this.http.get<Book[]>(this.mockUrl, {headers: this.headers}).pipe(
-    tap((data) => console.log(JSON.stringify(data))),
-    shareReplay(1),
-    catchError(this.handleError)
-  );
 
   getBook(id: number): Observable<Book> {
     if (id === 0) {

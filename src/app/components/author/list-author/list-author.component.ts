@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthorService } from 'src/app/service/author.service';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Author } from 'src/app/model/author';
-import { catchError } from 'rxjs/operators';
 import { AuthorStoreService } from 'src/app/service/author-store.service';
 
 @Component({
@@ -18,11 +16,6 @@ export class ListAuthorComponent implements OnInit {
   constructor(private authorStorService: AuthorStoreService) {}
 
   ngOnInit(): void {
-    this.authors$ = this.authorStorService.authors$.pipe(
-      catchError((error) => {
-        this.errorMessage = error;
-        return EMPTY;
-      })
-    );
+    this.authors$ = this.authorStorService.authors$;
   }
 }

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BookService } from 'src/app/service/book.service';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Book } from 'src/app/model/book';
 import { Author } from 'src/app/model/author';
-import { catchError } from 'rxjs/operators';
 import { BookStoreService } from 'src/app/service/book-store.service';
+import { MessagesService } from '../../messages/messages.service';
 
 @Component({
   selector: 'app-list-book',
@@ -16,15 +15,10 @@ export class ListBookComponent implements OnInit {
   books$: Observable<Book[]>;
   errorMessage = '';
 
-  constructor(public bookStoreService: BookStoreService) {}
+  constructor(public bookStoreService: BookStoreService, private messages: MessagesService) {}
 
   ngOnInit(): void {
-   this.books$ = this.bookStoreService.courses$.pipe(
-     catchError( err => {
-       this.errorMessage = err
-       return EMPTY
-     })
-   )
+   this.books$ = this.bookStoreService.books$;
   }
 
   transformAuthor(authors: Author[]): string[] {

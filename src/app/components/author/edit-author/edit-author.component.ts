@@ -20,6 +20,8 @@ import { GenericValidator } from 'src/app/shared/generic-validator';
 import { Observable, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { LoadingService } from '../../loading/loading.service';
+import { AuthorStoreService } from 'src/app/service/author-store.service';
+import { MessagesService } from '../../messages/messages.service';
 
 @Component({
   selector: 'app-edit-author',
@@ -46,7 +48,9 @@ export class EditAuthorComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private authorService: AuthorService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private authorStoreService: AuthorStoreService,
+    private message: MessagesService
   ) {
     // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
@@ -116,7 +120,7 @@ export class EditAuthorComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: err => {
         this.loadingService.loadingOff();
-        this.errorMessage = err;
+        this.message.showErrors(err);
       }
     });
   }
@@ -147,12 +151,12 @@ export class EditAuthorComponent implements OnInit, AfterViewInit, OnDestroy {
         if (b.id === 0) {
           this.authorService.createAuthor(b).subscribe({
             next: () => this.onSaveComplete(),
-            error: err => this.errorMessage = err
+            error: err => this.message.showErrors(err)
           });
         } else {
           this.authorService.updateAuthor(b).subscribe({
             next: () => this.onSaveComplete(),
-            error: err => this.errorMessage = err
+            error: err => this.message.showErrors(err)
           });
         }
       } else {
@@ -172,7 +176,7 @@ export class EditAuthorComponent implements OnInit, AfterViewInit, OnDestroy {
       if (confirm(`Really delete the author: ${this.author.name}?`)) {
         this.authorService.deleteAuthor(this.author.id).subscribe({
           next: () => this.onSaveComplete(),
-          error: err => this.errorMessage = err
+          error: err => this.message.showErrors(err)
         });
       }
     }
@@ -181,6 +185,7 @@ export class EditAuthorComponent implements OnInit, AfterViewInit, OnDestroy {
   onSaveComplete(): void {
     // Reset the form to clear the flags
     this.authorForm.reset();
+    this.authorStoreService.loadAllAuthors();
     this.router.navigate(['/authors']);
   }
 }
